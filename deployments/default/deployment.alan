@@ -10,6 +10,12 @@ systems
 
 		instance-data:
 			local
+	'planning'
+		configuration: 'default'
+			'timezone' = "Europe/Amsterdam"
+
+		instance-data:
+			local
 
 	'server'
 		configuration: 'single-core'

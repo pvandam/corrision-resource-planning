@@ -1,0 +1,21 @@
+root {
+	'resources': collection  {
+		'resource': text
+	}
+	'orders': collection  {
+		'order': text
+		'duration': number 'minutes'
+		'scheduled': stategroup (
+			'no' -> { }
+			'yes' -> {
+				'resource': text -> .'resources'
+				'start': number 'date time'
+				'end': number 'date time'
+			}
+		)
+	}
+}
+
+numerical types
+'date time' { date-time }
+'minutes' { duration: minutes }

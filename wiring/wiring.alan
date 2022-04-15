@@ -19,6 +19,11 @@ systems
 		project / (
 			'model' = consume 'server'/'model'
 		)
+	'planning': 'webclient'
+		project / (
+			'model' = consume 'server'/'model'
+		)
 
 provided-connections
 	'client' = 'client'::'http'
+	'planning' = 'planning'::'http'

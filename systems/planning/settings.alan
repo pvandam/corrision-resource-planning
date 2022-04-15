@@ -1,0 +1,12 @@
+settings
+	application creator : 'Kjerner'
+	application name : 'Planning'
+	default language : 'en.alan'
+	anonymous login : enabled
+	reload on unexpected error : enabled
+	content selection : disabled
+	report limit : 500
+	announcement : "" [ ]
+
+windows
+'main'
