@@ -1,0 +1,18 @@
+root = root as $ (
+	'start': number = $ .'start'
+	'end': number = $ .'end'
+	'resources': collection = <!"Default collection mapping, should succeed when key-property remains the same."!> map ( $ .'resources' ) as $ = (
+		'resource': text = $ .'resource'
+	)
+	'orders': collection = <!"Default collection mapping, should succeed when key-property remains the same."!> map ( $ .'orders' ) as $ = (
+		'order': text = $ .'order'
+		'duration': number = $ .'duration'
+		'scheduled': stategroup = switch $ ?'scheduled' (
+			|'no' as $ = 'no' ( )
+			|'yes' as $ = 'yes' (
+				'resource': text = $ .'resource'
+				'start': number = $ .'start'
+			)
+		)
+	)
+)

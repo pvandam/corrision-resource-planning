@@ -1,0 +1,34 @@
+users
+	anonymous
+
+interfaces
+
+root {
+	'start': number 'date time'
+	'end': number 'date time'
+	'resources': collection ['resource'] {
+		'resource': text
+	}
+	'orders': collection ['order'] {
+		'order': text
+		'duration': number positive 'minutes'
+		'scheduled': stategroup (
+			'no' { }
+			'yes' {
+				'resource': text -> ^ ^ .'resources'[]
+				'start': number 'date time'
+				'end': number 'date time' = add (
+					.'start',
+					from 'minutes' ^ .'duration'
+				)
+			}
+		)
+	}
+}
+
+numerical-types
+	'date time': time-in-seconds in 'seconds' @date-time
+	'seconds'
+		= 'minutes' * 60 * 10 ^ 0
+		@duration: seconds
+	'minutes' @duration: minutes
