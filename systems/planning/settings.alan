@@ -3,7 +3,7 @@ settings
 	application name : 'Planning'
 	default language : 'en.alan'
 	anonymous login : enabled
-	reload on unexpected error : enabled
+	reload on unexpected error : disabled
 	content selection : disabled
 	report limit : 500
 	announcement : "" [ ]
