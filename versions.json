@@ -1,0 +1,14 @@
+{
+	"platform version": "2021.10",
+	"system types": {
+		"auto-webclient": {
+			"version": "seven.5"
+		},
+		"datastore": {
+			"version": "85"
+		},
+		"session-manager": {
+			"version": "15"
+		}
+	}
+}
