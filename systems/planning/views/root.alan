@@ -7,6 +7,12 @@
 		}
 		'orders':: collection .'orders' {
 			'order':: text 'order' { }
+			'duration':: number 'duration' { }
+			'custom color':: stategroup 'custom color' -> {
+				'yes':: state |'yes' {
+					'color':: text 'color' { }
+				}
+			}
 			'scheduled':: stategroup 'scheduled' -> {
 				'yes':: state |'yes' {
 					'resource':: text 'resource' { }

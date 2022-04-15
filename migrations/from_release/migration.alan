@@ -6,6 +6,7 @@ root = root as $ (
 	)
 	'orders': collection = <!"Default collection mapping, should succeed when key-property remains the same."!> map ( $ .'orders' ) as $ = (
 		'order': text = $ .'order'
+		'custom color': stategroup = 'no' ( )
 		'duration': number = $ .'duration'
 		'scheduled': stategroup = switch $ ?'scheduled' (
 			|'no' as $ = 'no' ( )

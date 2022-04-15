@@ -12,6 +12,12 @@ root {
 	'orders': collection ['order'] {
 		'order': text
 		'duration': number positive 'minutes'
+		'custom color': stategroup @default: 'no' (
+			'no' { }
+			'yes' {
+				'color': text @color
+			}
+		)
 		'scheduled': stategroup (
 			'no' { }
 			'yes' {

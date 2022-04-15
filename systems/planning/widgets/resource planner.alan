@@ -6,6 +6,12 @@ binding 'node' {
 	}
 	'orders': binding 'collection' {
 		'order': binding .'entries' 'entry' 'entity' 'node' 'text' { }
+		'duration': binding .'entries' 'entry' 'entity' 'node' 'number' { }
+		'custom color': binding .'entries' 'entry' 'entity' 'node' 'state group' {
+			'yes': binding 'state' {
+				'color': binding 'node' 'text' { }
+			}
+		}
 		'scheduled': binding .'entries' 'entry' 'entity' 'node' 'state group' {
 			'yes': binding 'state' {
 				'resource': binding 'node' 'text' { }
@@ -135,6 +141,15 @@ control 'list' {
 									'end' = switch $ /'node'::'end time'.'is set' (
 										|'yes' as $ => $ #'number' transform 'julian date time to JS date'
 										|'no' => 0
+									)
+									'style' = switch ^ $ /'entry'/'entity'/'node'::'custom color'::'yes'.'is selected' (
+										|'yes' => switch ^ $ /'entry'/'entity'/'node'::'custom color'::'yes'/'node'::'color'.'is set' (
+											|'yes' as $ => 'color' {
+												'value' = $ .'text'
+											}
+											|'no' => 'default' { }
+										)
+										|'no' => 'default' { }
 									)
 									'click' = root set state 'show popup': 'yes' (
 										'task': text = ^ $ .key

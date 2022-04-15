@@ -7,6 +7,12 @@ root {
 	'orders': collection  {
 		'order': text
 		'duration': number 'minutes'
+		'custom color': stategroup (
+			'no' -> { }
+			'yes' -> {
+				'color': text
+			}
+		)
 		'scheduled': stategroup (
 			'no' -> { }
 			'yes' -> {
