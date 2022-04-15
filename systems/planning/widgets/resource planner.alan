@@ -19,6 +19,7 @@ binding 'node' {
 		}
 	}
 	'dragged task': text default: ""
+	'drop status': text default: ""
 	'show popup': stategroup default: 'no' (
 		'no' { }
 		'yes' {
@@ -66,6 +67,27 @@ control 'list' {
 						}
 					}
 				} ,
+				// {
+				// 	'item markup' = control 'list' {
+				// 		'space between items' = 'auto' { }
+				// 		'orientation' = 'vertical' {
+				// 			'height' = 'auto' {
+				// 				'list' = [
+				// 					{
+				// 						'item markup' = control 'text' {
+				// 							'text' = root . ::'dragged task'
+				// 						}
+				// 					} ,
+				// 					{
+				// 						'item markup' = control 'text' {
+				// 							'text' = root . ::'drop status'
+				// 						}
+				// 					}
+				// 				]
+				// 			}
+				// 		}
+				// 	}
+				// } ,
 				{
 					'item markup' = control 'padded box' {
 						'padding right' = 'single' { }
@@ -78,14 +100,21 @@ control 'list' {
 									|'no' => "-"
 								)
 								'drop' = switch root ::'orders'.'entries'[ root . ::'dragged task' ] (
-									| node /'entry'/'entity'/'node' as $ => switch $ ::'order'.'is set' (
+									| node /'entry'/'entity'/'node' as $ => switch ^ $ /'entry'/'entity'/'node'::'name'.'is set' (
 										|'yes' as $ => [
 											^ $ ::'scheduled'::'yes'/'node'::'move'/'parameters'::'resource'>>'update text' ( text $ .'text' ) ,
-											^ $ ::'scheduled'::'yes'/'node'::'move'/'parameters'::'start time'>>'set number' ( number # argument transform 'JS date to julian date and time' )
+											^ $ ::'scheduled'::'yes'/'node'::'move'/'parameters'::'start time'>>'set number' ( number # argument transform 'JS date to julian date and time' ) ,
+											switch ^ $ ::'scheduled'::'yes'/'node'::'move'.'executable' (
+												|'yes' as $ => [
+													$ >>'execute',
+													root set text 'drop status' = "executing"
+												]
+												|'no' => root set text 'drop status' = "not executable"
+											)
 										]
-										|'no' => none
+										|'no' => root set text 'drop status' = "no order"
 									)
-									| none => none
+									| none => root set text 'drop status' = "no dragged task"
 								)
 							}
 							'tasks' = walk ::'orders'.'entries' as $ => switch $ /'entry'/'entity'/'node'::'scheduled'::'yes'.'is selected' (
