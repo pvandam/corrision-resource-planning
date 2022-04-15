@@ -1,0 +1,56 @@
+binding 'node' {
+	'start time': binding 'number' { }
+	'end time': binding 'number' { }
+	'resources': binding 'collection' {
+		'name': binding .'entries' 'entry' 'entity' 'node' 'text' { }
+	}
+	'orders': binding 'collection' {
+		'order': binding .'entries' 'entry' 'entity' 'node' 'text' { }
+		'scheduled': binding .'entries' 'entry' 'entity' 'node' 'state group' {
+			'yes': binding 'state' {
+				'resource': binding 'node' 'text' { }
+				'start time': binding 'node' 'number' { }
+				'end time': binding 'node' 'number' { }
+			}
+		}
+	}
+}
+
+control 'resource planning' {
+	'resources' = walk ::'resources'.'entries' as $ => {
+		'name' = switch $ /'entry'/'entity'/'node'::'name'.'is set' (
+			|'yes' as $ => $ .'text'
+			|'no' => "-"
+		)
+	}
+	'tasks' = walk ::'orders'.'entries' as $ => switch $ /'entry'/'entity'/'node'::'scheduled'::'yes'.'is selected' (
+		|'no' => none
+		|'yes' $ /'entry'/'entity'/'node'::'scheduled'::'yes' as $ => {
+			'name' = switch ^ $ /'entry'/'entity'/'node'::'order'.'is set' (
+				|'yes' as $ => $ .'text'
+				|'no' => "-"
+			)
+			'resource' = switch $ /'node'::'resource'.'is set' (
+				|'yes' as $ => $ .'text'
+				|'no' => "-"
+			)
+			'start' = switch $ /'node'::'start time'.'is set' (
+				|'yes' as $ => $ #'number'
+				|'no' => 0
+			)
+			'end' = switch $ /'node'::'end time'.'is set' (
+				|'yes' as $ => $ #'number'
+				|'no' => 0
+			)
+		}
+	)
+	'start time' = switch ::'start time'.'is set' (
+		|'yes' as $ => $ #'number'
+		|'no' => 0
+	)
+	'end time' = switch ::'end time'.'is set' (
+		|'yes' as $ => $ #'number'
+		|'no' => 0
+	)
+	'axis width' = 2000
+}

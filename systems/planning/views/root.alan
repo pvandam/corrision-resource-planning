@@ -1,2 +1,18 @@
 'main' ( )
-	'empty.alan' { }
+	'resource planner.alan' {
+		'start time':: number 'start' { }
+		'end time':: number 'end' { }
+		'resources':: collection .'resources' {
+			'name':: text 'resource' { }
+		}
+		'orders':: collection .'orders' {
+			'order':: text 'order' { }
+			'scheduled':: stategroup 'scheduled' -> {
+				'yes':: state |'yes' {
+					'resource':: text 'resource' { }
+					'start time':: number 'start' { }
+					'end time':: number 'end' { }
+				}
+			}
+		}
+	}

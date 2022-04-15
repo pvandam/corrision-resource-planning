@@ -4,6 +4,8 @@ users
 interfaces
 
 root {
+	'start': number 'date time'
+	'end': number 'date time'
 	'resources': collection ['resource'] {
 		'resource': text
 	}
