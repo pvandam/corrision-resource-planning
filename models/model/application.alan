@@ -9,12 +9,16 @@ root {
 	}
 	'orders': collection ['order'] {
 		'order': text
+		'duration': number positive 'minutes'
 		'scheduled': stategroup (
 			'no' { }
 			'yes' {
 				'resource': text -> ^ ^ .'resources'[]
 				'start': number 'date time'
-				'end': number 'date time'
+				'end': number 'date time' = add (
+					.'start',
+					from 'minutes' ^ .'duration'
+				)
 			}
 		)
 	}
@@ -22,4 +26,7 @@ root {
 
 numerical-types
 	'date time': time-in-seconds in 'seconds' @date-time
-	'seconds' @duration: seconds
+	'seconds'
+		= 'minutes' * 60 * 10 ^ 0
+		@duration: seconds
+	'minutes' @duration: minutes
