@@ -57,7 +57,7 @@ control 'list' {
 										} ,
 										{
 											'item markup' = control 'text' {
-												'text' = "Corrosion order planning"
+												'text' = "CORROSION ORDER PLANNING"
 												'heading level' = 'first' { }
 											}
 										}
