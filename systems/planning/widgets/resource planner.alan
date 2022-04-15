@@ -14,6 +14,12 @@ binding 'node' {
 			}
 		}
 	}
+	'show popup': stategroup default: 'no' (
+		'no' { }
+		'yes' {
+			'task': text
+		}
+	)
 }
 
 control 'list' {
@@ -66,6 +72,7 @@ control 'list' {
 									|'yes' as $ => $ .'text'
 									|'no' => "-"
 								)
+								'drop' = none
 							}
 							'tasks' = walk ::'orders'.'entries' as $ => switch $ /'entry'/'entity'/'node'::'scheduled'::'yes'.'is selected' (
 								|'no' => none
@@ -86,6 +93,10 @@ control 'list' {
 										|'yes' as $ => $ #'number'
 										|'no' => 0
 									)
+									'click' = root set state 'show popup': 'yes' (
+										'task': text = ^ $ .key
+									)
+									'start drag' = none
 								}
 							)
 							'start time' = switch ::'start time'.'is set' (
@@ -96,10 +107,91 @@ control 'list' {
 								|'yes' as $ => $ #'number'
 								|'no' => 0
 							)
-							'axis width' = 2000
+							'axis width' = 1500
 						}
 					}
-				}
+				} ,
+				switch . ::'show popup' (
+					|'no' => none
+					|'yes' as $ => switch root ::'orders'.'entries'[ $ . ::'task' ] (
+						| node as $ => {
+							'item markup' = control 'sheet' {
+								'position' = 'top' { }
+								'close action enabled' = 'yes' {
+									'close action' = root set state 'show popup': 'no' ( )
+								}
+								'main' = control 'padded box' {
+									'markup' = control 'list' {
+										'space between items' = 'none' { }
+										'orientation' = 'vertical' {
+											'height' = 'auto' {
+												'list' = [
+													{
+														'item markup' = control 'padded box' {
+															'padding top' = 'half' { }
+															'padding right' = 'single' { }
+															'padding left' = 'single' { }
+															'background color' = 'set' {
+																'color' = "#f2f2f2"
+															}
+															'markup' = control 'list' {
+																'space between items' = 'none' { }
+																'align' = 'center' { }
+																'orientation' = 'horizontal' {
+																	'width' = 'auto' {
+																		'list' = [
+																			{
+																				'item markup' = control 'font size' {
+																					'font size' = 20
+																					'markup' = control 'icon' {
+																						'name' = 'ballot' { }
+																					}
+																				}
+																			} ,
+																			{
+																				'item markup' = control 'text' {
+																					'text' = switch $ /'entry'/'entity'/'node'::'order'.'is set' (
+																						|'yes' as $ => $ .'text'
+																						|'no' => "-"
+																					)
+																					'heading level' = 'second' { }
+																				}
+																			}
+																		]
+																	}
+																}
+															}
+														}
+													}
+												]
+											}
+										}
+									}
+								}
+								'bottom bar' = control 'toolbar' {
+									'items' = [
+										{
+											'type' = 'flexible space' { }
+										} ,
+										{
+											'type' = 'regular' {
+												'markup' = control 'button' {
+													'type' = 'text' {
+														'text' = "close"
+													}
+													'enabled' = 'yes' {
+														'onclick' = root set state 'show popup': 'no' ( )
+													}
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+						| none => none
+					)
+				)
 			]
 		}
 	}
