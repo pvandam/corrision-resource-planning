@@ -1,14 +1,14 @@
 {
-	"platform version": "2021.10",
+	"platform version": "2022.2",
 	"system types": {
 		"auto-webclient": {
-			"version": "seven.5"
+			"version": "uhura.3"
+		},
+		"webclient": {
+			"version": "uhura.3.0"
 		},
 		"datastore": {
-			"version": "85"
-		},
-		"session-manager": {
-			"version": "15"
+			"version": "95"
 		}
 	}
 }

@@ -15,16 +15,10 @@ systems
 			'model' = provide 'model'
 		)
 
-	'sessions': 'session-manager'
-		project / (
-			'model' = bind 'server'::'authenticate'
-		)
-
 	'client': 'auto-webclient'
 		project / (
 			'model' = consume 'server'/'model'
 		)
 
 provided-connections
-	'auth' = 'sessions'::'http'
 	'client' = 'client'::'http'

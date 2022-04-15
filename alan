@@ -9,7 +9,7 @@ set -e
 # If an "offline" file is present in the project, it will not download anything.
 
 
-VERSION="2021.10"
+VERSION="2022.2"
 export ALAN_COMPILER_LOG=${ALAN_COMPILER_LOG:-warning} # default log level: warning
 
 function find_up {

@@ -1,0 +1,4 @@
+root = root as $ (
+	'resources': collection = <! !> none
+	'orders': collection = <! !> none
+)
