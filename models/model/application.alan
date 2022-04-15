@@ -13,9 +13,13 @@ root {
 			'no' { }
 			'yes' {
 				'resource': text -> ^ ^ .'resources'[]
+				'start': number 'date time'
+				'end': number 'date time'
 			}
 		)
 	}
 }
 
 numerical-types
+	'date time': time-in-seconds in 'seconds' @date-time
+	'seconds' @duration: seconds
