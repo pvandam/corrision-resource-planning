@@ -16,41 +16,91 @@ binding 'node' {
 	}
 }
 
-control 'resource planning' {
-	'resources' = walk ::'resources'.'entries' as $ => {
-		'name' = switch $ /'entry'/'entity'/'node'::'name'.'is set' (
-			|'yes' as $ => $ .'text'
-			|'no' => "-"
-		)
-	}
-	'tasks' = walk ::'orders'.'entries' as $ => switch $ /'entry'/'entity'/'node'::'scheduled'::'yes'.'is selected' (
-		|'no' => none
-		|'yes' $ /'entry'/'entity'/'node'::'scheduled'::'yes' as $ => {
-			'name' = switch ^ $ /'entry'/'entity'/'node'::'order'.'is set' (
-				|'yes' as $ => $ .'text'
-				|'no' => "-"
-			)
-			'resource' = switch $ /'node'::'resource'.'is set' (
-				|'yes' as $ => $ .'text'
-				|'no' => "-"
-			)
-			'start' = switch $ /'node'::'start time'.'is set' (
-				|'yes' as $ => $ #'number'
-				|'no' => 0
-			)
-			'end' = switch $ /'node'::'end time'.'is set' (
-				|'yes' as $ => $ #'number'
-				|'no' => 0
-			)
+control 'list' {
+	'space between items' = 'none' { }
+	'orientation' = 'vertical' {
+		'height' = 'auto' {
+			'list' = [
+				{
+					'item markup' = control 'padded box' {
+						'padding top' = 'half' { }
+						'padding right' = 'single' { }
+						'padding left' = 'single' { }
+						'background color' = 'set' {
+							'color' = "#f2f2f2"
+						}
+						'markup' = control 'list' {
+							'space between items' = 'none' { }
+							'align' = 'center' { }
+							'orientation' = 'horizontal' {
+								'width' = 'auto' {
+									'list' = [
+										{
+											'item markup' = control 'font size' {
+												'font size' = 20
+												'markup' = control 'icon' {
+													'name' = 'analytics' { }
+												}
+											}
+										} ,
+										{
+											'item markup' = control 'text' {
+												'text' = "Corrosion order planning"
+												'heading level' = 'first' { }
+											}
+										}
+									]
+								}
+							}
+						}
+					}
+				} ,
+				{
+					'item markup' = control 'padded box' {
+						'padding right' = 'single' { }
+						'padding bottom' = 'single' { }
+						'padding left' = 'single' { }
+						'markup' = control 'resource planning' {
+							'resources' = walk ::'resources'.'entries' as $ => {
+								'name' = switch $ /'entry'/'entity'/'node'::'name'.'is set' (
+									|'yes' as $ => $ .'text'
+									|'no' => "-"
+								)
+							}
+							'tasks' = walk ::'orders'.'entries' as $ => switch $ /'entry'/'entity'/'node'::'scheduled'::'yes'.'is selected' (
+								|'no' => none
+								|'yes' $ /'entry'/'entity'/'node'::'scheduled'::'yes' as $ => {
+									'name' = switch ^ $ /'entry'/'entity'/'node'::'order'.'is set' (
+										|'yes' as $ => $ .'text'
+										|'no' => "-"
+									)
+									'resource' = switch $ /'node'::'resource'.'is set' (
+										|'yes' as $ => $ .'text'
+										|'no' => "-"
+									)
+									'start' = switch $ /'node'::'start time'.'is set' (
+										|'yes' as $ => $ #'number'
+										|'no' => 0
+									)
+									'end' = switch $ /'node'::'end time'.'is set' (
+										|'yes' as $ => $ #'number'
+										|'no' => 0
+									)
+								}
+							)
+							'start time' = switch ::'start time'.'is set' (
+								|'yes' as $ => $ #'number'
+								|'no' => 0
+							)
+							'end time' = switch ::'end time'.'is set' (
+								|'yes' as $ => $ #'number'
+								|'no' => 0
+							)
+							'axis width' = 2000
+						}
+					}
+				}
+			]
 		}
-	)
-	'start time' = switch ::'start time'.'is set' (
-		|'yes' as $ => $ #'number'
-		|'no' => 0
-	)
-	'end time' = switch ::'end time'.'is set' (
-		|'yes' as $ => $ #'number'
-		|'no' => 0
-	)
-	'axis width' = 2000
+	}
 }
