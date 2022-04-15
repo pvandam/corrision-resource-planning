@@ -4,6 +4,18 @@ users
 interfaces
 
 root {
+	'resources': collection ['resource'] {
+		'resource': text
+	}
+	'orders': collection ['order'] {
+		'order': text
+		'scheduled': stategroup (
+			'no' { }
+			'yes' {
+				'resource': text -> ^ ^ .'resources'[]
+			}
+		)
+	}
 }
 
 numerical-types
