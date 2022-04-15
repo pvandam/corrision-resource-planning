@@ -15,6 +15,13 @@ root {
 		'scheduled': stategroup (
 			'no' { }
 			'yes' {
+				'move': command {
+					'resource': text
+					'start': number 'date time'
+				} => update (
+					'resource' = @ .'resource'
+					'start' = @ .'start'
+				)
 				'resource': text -> ^ ^ .'resources'[]
 				'start': number 'date time'
 				'end': number 'date time' = add (

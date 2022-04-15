@@ -11,9 +11,14 @@ binding 'node' {
 				'resource': binding 'node' 'text' { }
 				'start time': binding 'node' 'number' { }
 				'end time': binding 'node' 'number' { }
+				'move': binding 'node' 'operation' {
+					'resource': binding 'parameters' 'text' { }
+					'start time': binding 'parameters' 'number' { }
+				}
 			}
 		}
 	}
+	'dragged task': text default: ""
 	'show popup': stategroup default: 'no' (
 		'no' { }
 		'yes' {
@@ -72,7 +77,16 @@ control 'list' {
 									|'yes' as $ => $ .'text'
 									|'no' => "-"
 								)
-								'drop' = none
+								'drop' = switch root ::'orders'.'entries'[ root . ::'dragged task' ] (
+									| node /'entry'/'entity'/'node' as $ => switch $ ::'order'.'is set' (
+										|'yes' as $ => [
+											^ $ ::'scheduled'::'yes'/'node'::'move'/'parameters'::'resource'>>'update text' ( text $ .'text' ) ,
+											^ $ ::'scheduled'::'yes'/'node'::'move'/'parameters'::'start time'>>'set number' ( number # argument transform 'JS date to julian date and time' )
+										]
+										|'no' => none
+									)
+									| none => none
+								)
 							}
 							'tasks' = walk ::'orders'.'entries' as $ => switch $ /'entry'/'entity'/'node'::'scheduled'::'yes'.'is selected' (
 								|'no' => none
@@ -86,25 +100,25 @@ control 'list' {
 										|'no' => "-"
 									)
 									'start' = switch $ /'node'::'start time'.'is set' (
-										|'yes' as $ => $ #'number'
+										|'yes' as $ => $ #'number' transform 'julian date time to JS date'
 										|'no' => 0
 									)
 									'end' = switch $ /'node'::'end time'.'is set' (
-										|'yes' as $ => $ #'number'
+										|'yes' as $ => $ #'number' transform 'julian date time to JS date'
 										|'no' => 0
 									)
 									'click' = root set state 'show popup': 'yes' (
 										'task': text = ^ $ .key
 									)
-									'start drag' = none
+									'start drag' = root set text 'dragged task' = ^ $ .key
 								}
 							)
 							'start time' = switch ::'start time'.'is set' (
-								|'yes' as $ => $ #'number'
+								|'yes' as $ => $ #'number' transform 'julian date time to JS date'
 								|'no' => 0
 							)
 							'end time' = switch ::'end time'.'is set' (
-								|'yes' as $ => $ #'number'
+								|'yes' as $ => $ #'number' transform 'julian date time to JS date'
 								|'no' => 0
 							)
 							'axis width' = 1500
@@ -160,6 +174,60 @@ control 'list' {
 																		]
 																	}
 																}
+															}
+														}
+													} ,
+													{
+														'item markup' = control 'padded box' {
+															'padding top' = 'half' { }
+															'padding right' = 'half' { }
+															'padding left' = 'half' { }
+															'markup' = control 'property list' {
+																'entries' = [
+																	switch $ /'entry'/'entity'/'node'::'scheduled'::'yes'.'is selected' (
+																		|'yes' $ /'entry'/'entity'/'node'::'scheduled'::'yes'/'node' as $ => [
+																			{
+																				'label' = control 'text' {
+																					'text' = "resource"
+																				}
+																				'folding' = 'disabled' { }
+																				'property' = control 'text' {
+																					'text' = switch $ ::'resource'.'is set' (
+																						|'yes' as $ => $ .'text'
+																						|'no' => "-"
+																					)
+																				}
+																			} ,
+																			{
+																				'label' = control 'text' {
+																					'text' = "start"
+																				}
+																				'folding' = 'disabled' { }
+																				'property' = control 'text' {
+																					'text' = switch $ ::'start time'.'is set' (
+																						|'yes' as $ => $ #'number' format 'date and time'
+																						|'no' => "-"
+																					)
+																				}
+																			} ,
+																			{
+																				'label' = control 'text' {
+																					'text' = "end"
+																				}
+																				'folding' = 'disabled' { }
+																				'property' = control 'text' {
+																					'text' = switch $ ::'end time'.'is set' (
+																						|'yes' as $ => $ #'number' format 'date and time'
+																						|'no' => "-"
+																					)
+																				}
+																			}
+																		]
+																		|'no' => none
+																	)
+																]
+																'outlined' = 'no' { }
+																'layout' = 'normal' { }
 															}
 														}
 													}

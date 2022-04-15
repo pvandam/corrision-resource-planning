@@ -12,6 +12,10 @@
 					'resource':: text 'resource' { }
 					'start time':: number 'start' { }
 					'end time':: number 'end' { }
+					'move':: command 'move' {
+						'resource':: text 'resource' { }
+						'start time':: number 'start' { }
+					}
 				}
 			}
 		}
